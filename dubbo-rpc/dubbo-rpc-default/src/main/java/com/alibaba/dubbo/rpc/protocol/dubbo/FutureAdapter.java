@@ -22,6 +22,7 @@ import java.util.concurrent.TimeoutException;
 
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.dubbo.remoting.RemotingException;
+import com.alibaba.dubbo.remoting.exchange.ResponseCallback;
 import com.alibaba.dubbo.remoting.exchange.ResponseFuture;
 import com.alibaba.dubbo.rpc.Result;
 import com.alibaba.dubbo.rpc.RpcException;
@@ -34,6 +35,10 @@ import com.alibaba.dubbo.rpc.RpcException;
 public class FutureAdapter<V> implements Future<V> {
     
     private final ResponseFuture future;
+    
+    private ResponseCallback callback;
+    
+    private boolean timeout = false;
 
     public FutureAdapter(ResponseFuture future){
         this.future = future;
@@ -80,4 +85,20 @@ public class FutureAdapter<V> implements Future<V> {
         }
     }
 
+	public ResponseCallback getCallback() {
+		return callback;
+	}
+
+	public void setCallback(ResponseCallback callback) {
+		this.callback = callback;
+	}
+
+	public boolean isTimeout() {
+		return timeout;
+	}
+
+	public void setTimeout(boolean timeout) {
+		this.timeout = timeout;
+	}
+	
 }

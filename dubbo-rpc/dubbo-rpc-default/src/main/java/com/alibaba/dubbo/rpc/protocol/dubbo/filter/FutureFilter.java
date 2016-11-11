@@ -68,11 +68,17 @@ public class FutureFilter implements Filter {
     }
     
     private void asyncCallback(final Invoker<?> invoker, final Invocation invocation) {
-        Future<?> f = RpcContext.getContext().getFuture();
+        final Future<?> f = RpcContext.getContext().getFuture();
         if (f instanceof FutureAdapter) {
             ResponseFuture future = ((FutureAdapter<?>)f).getFuture();
             future.setCallback(new ResponseCallback() {
                 public void done(Object rpcResult) {
+                	// invoke callback
+                	ResponseCallback callback = ((FutureAdapter<?>)f).getCallback();
+                	if(callback != null){
+                		callback.done(rpcResult);
+                	}
+                	
                     if (rpcResult == null){
                         logger.error(new IllegalStateException("invalid result value : null, expected "+Result.class.getName()));
                         return;
@@ -90,6 +96,12 @@ public class FutureFilter implements Filter {
                     }
                 }
                 public void caught(Throwable exception) {
+                	// invoke callback
+                	ResponseCallback callback = ((FutureAdapter<?>)f).getCallback();
+                	if(callback != null){
+                		callback.caught(exception);
+                	}
+                	
                     fireThrowCallback(invoker, invocation, exception);
                 }
             });
