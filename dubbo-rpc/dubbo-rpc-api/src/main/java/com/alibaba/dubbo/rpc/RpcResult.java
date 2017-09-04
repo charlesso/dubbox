@@ -119,6 +119,7 @@ public class RpcResult implements Result, Serializable {
 
     @Override
     public String toString() {
-        return "RpcResult [result=" + result + ", exception=" + exception + "]";
+        //return "RpcResult [result=" + result + ", exception=" + exception + "]";
+		return "RpcResult [result=" + (result == null ? "null":result.getClass()) + ", exception=" + exception + "]";
     }
 }
